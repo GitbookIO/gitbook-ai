@@ -1,5 +1,7 @@
 ---
 name: configure-site
+metadata:
+  version: "1.0"
 description: "Create and maintain entire GitBook documentation sites end-to-end — design the site structure from source content, scaffold a Git repository in monorepo layout, set up the GitHub/GitLab remote, drive the GitBook REST API to create the site/sections/spaces, apply branded customization, and hand the user clean instructions for the one UI step (Git Sync wiring) that GitBook does not expose via API. Trigger this skill whenever the user wants to spin up a new GitBook docs site, restructure or extend an existing one, link spaces to a Git repo for sync, change a site's branding (logo, colors, fonts, header/footer), or programmatically manage spaces, sections, or site-spaces. This skill is the orchestration layer; for authoring the markdown content of any individual page it defers to the companion `write-docs` skill."
 ---
 
