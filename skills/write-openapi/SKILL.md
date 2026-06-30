@@ -1,5 +1,7 @@
 ---
 name: write-openapi
+metadata:
+  version: "1.0"
 description: >-
   Author, configure, structure, and troubleshoot OpenAPI/Swagger API reference
   documentation in GitBook. Use this whenever a task involves a GitBook OpenAPI
