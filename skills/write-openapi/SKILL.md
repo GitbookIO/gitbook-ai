@@ -1,5 +1,5 @@
 ---
-name: gitbook-openapi
+name: write-openapi
 description: >-
   Author, configure, structure, and troubleshoot OpenAPI/Swagger API reference
   documentation in GitBook. Use this whenever a task involves a GitBook OpenAPI

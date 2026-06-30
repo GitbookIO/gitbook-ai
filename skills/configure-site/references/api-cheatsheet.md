@@ -2,7 +2,7 @@
 
 All endpoints are at `https://api.gitbook.com/v1`. Authentication is `Authorization: Bearer $GITBOOK_TOKEN` on every request. JSON throughout.
 
-This cheatsheet is scoped to what the `manage-gitbook-site` skill actually needs. The full API surface is much larger — for less common endpoints, search the GitBook docs directly.
+This cheatsheet is scoped to what the `configure-site` skill actually needs. The full API surface is much larger — for less common endpoints, search the GitBook docs directly.
 
 ## Auth and discovery
 

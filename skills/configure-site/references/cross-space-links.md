@@ -184,8 +184,8 @@ The script is idempotent — running it twice doesn't break anything, since afte
 - **Don't forget to commit and push** after resolution — Git Sync needs the resolved content to render the links correctly.
 - **Don't paraphrase to avoid a cross-space link.** A docs site that says "see the API reference" without linking is a worse docs site than one that links cleanly. Use the sentinel pattern and resolve.
 
-## A note on what `write-gitbook` should know
+## A note on what `write-docs` should know
 
-The companion skill `write-gitbook` covers the markdown syntax for links in general. It should be aware that **cross-space links require resolved space IDs and won't work as relative paths**, and should produce them using the sentinel pattern when generating content for a multi-space site. The actual sentinel→ID resolution belongs to this skill (`manage-gitbook-site`), since this skill is the one with API access to fetch the IDs after space creation.
+The companion skill `write-docs` covers the markdown syntax for links in general. It should be aware that **cross-space links require resolved space IDs and won't work as relative paths**, and should produce them using the sentinel pattern when generating content for a multi-space site. The actual sentinel→ID resolution belongs to this skill (`configure-site`), since this skill is the one with API access to fetch the IDs after space creation.
 
-If `write-gitbook` is being used standalone (without `manage-gitbook-site` orchestrating), the user is responsible for replacing the sentinels themselves once they know the space IDs.
+If `write-docs` is being used standalone (without `configure-site` orchestrating), the user is responsible for replacing the sentinels themselves once they know the space IDs.

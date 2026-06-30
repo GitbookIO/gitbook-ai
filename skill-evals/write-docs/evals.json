@@ -1,0 +1,42 @@
+{
+  "skill_name": "write-docs",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Create a Getting Started page for a developer API product. It should have a brief intro, then use tabs to show installation for Node.js, Python, and cURL.",
+      "expected_output": "A valid GitBook markdown page with a {% tabs %} block containing three named tabs, each with the appropriate installation command in a code block.",
+      "files": [],
+      "expectations": [
+        "Output contains a {% tabs %} block with exactly three {% tab %} entries",
+        "Each tab has a title matching one of: Node.js, Python, cURL",
+        "Each tab contains a fenced code block with the appropriate language tag",
+        "Both {% tabs %} and {% tab %} blocks are properly closed with their {% end* %} tags"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Add a warning hint to a page explaining that API keys must never be committed to source control, and a tip hint below it pointing users to environment variable best practices.",
+      "expected_output": "Two GitBook hint blocks: one with style=\"warning\" about API key security, and one with style=\"tip\" about environment variables.",
+      "files": [],
+      "expectations": [
+        "Output contains {% hint style=\"warning\" %} block",
+        "Output contains {% hint style=\"tip\" %} block",
+        "The warning hint mentions API keys and source control",
+        "Both hint blocks are closed with {% endhint %}"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Generate a SUMMARY.md for a docs site with three top-level sections: Getting Started (with pages: Quickstart, Installation, Authentication), API Reference (with pages: Overview, Endpoints, Errors), and Changelog.",
+      "expected_output": "A valid GitBook SUMMARY.md with the correct nested list structure, relative links, and section groupings.",
+      "files": [],
+      "expectations": [
+        "File contains exactly three top-level sections",
+        "Getting Started section has exactly three child pages",
+        "API Reference section has exactly three child pages",
+        "All links use relative paths ending in .md",
+        "Indentation is consistent throughout"
+      ]
+    }
+  ]
+}

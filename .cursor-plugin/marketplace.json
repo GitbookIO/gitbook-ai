@@ -1,0 +1,13 @@
+{
+  "name": "gitbook-ai",
+  "owner": {
+    "name": "GitBook",
+    "email": "support@gitbook.com"
+  },
+  "plugins": [
+    {
+      "name": "gitbook",
+      "source": "./"
+    }
+  ]
+}
