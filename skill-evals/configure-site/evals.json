@@ -1,0 +1,42 @@
+{
+  "skill_name": "configure-site",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Scaffold a new GitBook site for a developer tool called 'Acme API'. It should have three spaces: Docs, API Reference, and Changelog. Set it up as a Git monorepo.",
+      "expected_output": "A monorepo directory structure with a folder per space, a README.md per space, and the sequence of GitBook REST API calls to create the site, sections, and spaces.",
+      "files": [],
+      "expectations": [
+        "Output includes a proposed directory tree with at least three subdirectories (one per space)",
+        "Each space directory contains at minimum a README.md",
+        "Output includes the API calls or curl commands to create the site and spaces",
+        "Git Sync wiring is explicitly called out as a manual UI step, not an API step"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Apply custom branding to an existing GitBook site: primary color #1D4ED8, use the system font, and set a custom footer with a privacy policy link.",
+      "expected_output": "A valid SiteCustomizationSettings JSON payload that can be PUT to the GitBook customization API, with the correct color, font, and footer fields populated.",
+      "files": [],
+      "expectations": [
+        "Output targets the correct customization API endpoint",
+        "primaryColor field is set to #1D4ED8",
+        "Footer section includes a link entry with a privacy policy label and a URL placeholder",
+        "Output advises to GET current settings first before constructing the PUT payload"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "I have an existing Mintlify docs site I want to migrate to GitBook. The site has about 40 pages across 4 sections. How should I approach this?",
+      "expected_output": "A migration plan covering: pre-flight content audit, MDX-to-GitBook-markdown conversion, SUMMARY.md generation, Mintlify component mapping, and the Git Sync handoff.",
+      "files": [],
+      "expectations": [
+        "Response includes a pre-flight or content audit step before any conversion begins",
+        "Response addresses MDX component conversion (e.g., Mintlify callouts to GitBook hints)",
+        "Response includes SUMMARY.md generation as a distinct step",
+        "Git Sync wiring is mentioned as a post-migration manual step",
+        "Response does not claim the migration can be fully automated without user review"
+      ]
+    }
+  ]
+}

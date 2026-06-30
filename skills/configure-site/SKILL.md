@@ -1,11 +1,11 @@
 ---
-name: manage-gitbook-site
-description: "Create and maintain entire GitBook documentation sites end-to-end — design the site structure from source content, scaffold a Git repository in monorepo layout, set up the GitHub/GitLab remote, drive the GitBook REST API to create the site/sections/spaces, apply branded customization, and hand the user clean instructions for the one UI step (Git Sync wiring) that GitBook does not expose via API. Trigger this skill whenever the user wants to spin up a new GitBook docs site, restructure or extend an existing one, link spaces to a Git repo for sync, change a site's branding (logo, colors, fonts, header/footer), or programmatically manage spaces, sections, or site-spaces. This skill is the orchestration layer; for authoring the markdown content of any individual page it defers to the companion `write-gitbook` skill."
+name: configure-site
+description: "Create and maintain entire GitBook documentation sites end-to-end — design the site structure from source content, scaffold a Git repository in monorepo layout, set up the GitHub/GitLab remote, drive the GitBook REST API to create the site/sections/spaces, apply branded customization, and hand the user clean instructions for the one UI step (Git Sync wiring) that GitBook does not expose via API. Trigger this skill whenever the user wants to spin up a new GitBook docs site, restructure or extend an existing one, link spaces to a Git repo for sync, change a site's branding (logo, colors, fonts, header/footer), or programmatically manage spaces, sections, or site-spaces. This skill is the orchestration layer; for authoring the markdown content of any individual page it defers to the companion `write-docs` skill."
 ---
 
-# Manage GitBook Site
+# Configure GitBook Site
 
-A skill for creating and maintaining entire GitBook documentation sites. Where `write-gitbook` covers what goes inside a single page, this skill covers everything around the pages: structure design, repo scaffolding, the GitBook REST API, and branding. Use the two skills together — this one calls into `write-gitbook` whenever it needs to generate or edit page content.
+A skill for creating and maintaining entire GitBook documentation sites. Where `write-docs` covers what goes inside a single page, this skill covers everything around the pages: structure design, repo scaffolding, the GitBook REST API, and branding. Use the two skills together — this one calls into `write-docs` whenever it needs to generate or edit page content.
 
 ## The fundamental constraint
 
@@ -26,17 +26,20 @@ If the user explicitly does not want Git Sync, fall back to the API content path
 
 Don't start scaffolding until these are known. If something is missing, ask once with a focused question rather than guessing.
 
-- **GitBook PAT** — required for all API calls. The user keeps this in 1Password and we fetch it at the start of each session via the `op` CLI:
+- **GitBook API token** — required for all API calls. Must be present as `GITBOOK_TOKEN` in the environment before any API calls are made. **Never ask the user to paste the token into the conversation** — tokens must only live in environment variables or a secrets manager.
+
+  Check for it at the start of the session:
 
   ```bash
-  export GITBOOK_TOKEN=$(op read "<secret-reference>")
+  [ -n "$GITBOOK_TOKEN" ] && echo "Token found" || echo "GITBOOK_TOKEN is not set"
   ```
 
-  The skill remembers the user's secret reference across sessions via Claude's memory feature. On first use:
-
-  1. Check user memories for a line like `User's GitBook PAT 1Password reference: op://...`. If present, use that reference directly.
-  2. If absent, ask the user once for their `op` secret reference (they can find it via "Copy Secret Reference" in the 1Password UI, or by running `op item get <item-name> --format=json`). After they share it, save it via `memory_user_edits add` so future sessions don't have to ask again.
-  3. If `op read` fails (not signed in, wrong reference, item moved), surface the exact error and stop. Don't fall back to asking the user to paste the token directly into the conversation — keeping it in `op` is the whole point.
+  If `GITBOOK_TOKEN` is not set:
+  1. Tell the user they need a GitBook API token. Direct them to **https://app.gitbook.com/account/developer** to create one.
+  2. Ask them to load it into the environment before continuing — for example:
+     - Directly: `export GITBOOK_TOKEN=<token>` in the terminal before starting the session
+     - From a secrets manager: `export GITBOOK_TOKEN=$(op read "op://vault/item/token")` for 1Password, or equivalent for AWS SSM, Vault, etc.
+  3. Do not proceed with any API calls until the token is confirmed present in the environment.
 
   Never write the token to a file, never echo it back in a response, never commit it.
 
@@ -204,9 +207,9 @@ The most common scaffolding mistake is to walk the file tree and emit a SUMMARY.
 
 If your scaffolding helper auto-generates a SUMMARY.md by walking folders, **make it idempotent and skip files that already exist**. A user-edited SUMMARY.md should never be silently clobbered — that's how hand-tuned navigation gets lost.
 
-### Per-page markdown — defer to write-gitbook, but reach for the rich blocks
+### Per-page markdown — defer to write-docs, but reach for the rich blocks
 
-**For all markdown files** — `README.md`, `SUMMARY.md`, every page — follow the `write-gitbook` skill. It is the authoritative reference for:
+**For all markdown files** — `README.md`, `SUMMARY.md`, every page — follow the `write-docs` skill. It is the authoritative reference for:
 
 - **Frontmatter** including the `icon:` field. Icons are Font Awesome names without the `fa-` prefix (e.g. `book-open`, `bolt`, `house`, `code`, `puzzle-piece`, `id-card`, `circle-dollar-to-slot`). Don't invent names — pick from the Font Awesome catalogue. The example site uses these in nearly every page's frontmatter.
 - **Layout flags** including `layout: width: wide` (use selectively — on marketing-style landing pages, on changelog pages with the Updates timeline, on pages with multi-column blocks or genuinely wide tables. **Don't default to wide for every space homepage** — the GitBook default width is right for documentation, including documentation landing pages with card-tables. Wide is for hero-style marketing layouts, not normal docs.), `cover:` images, and per-page visibility flags (`title.visible`, `tableOfContents.visible`, etc.).
@@ -409,66 +412,7 @@ Then make targeted PATCH/PUT/POST/DELETE calls. Don't replace whole customizatio
 
 The `SiteCustomizationSettings` schema is large. The bundled `references/example-site/customization.json` is a real export from a production-style demo and is the most useful reference — read it before composing any customization payload. It shows how all the nested fields fit together, how `localizedTitle` maps work, and how conditional header links are structured.
 
-Fields that matter most for "make this site look like our brand":
-
-- **`title`** — site title (the one shown in the header). Plus `localizedTitle: {en: ..., fr: ..., ...}` for translations.
-- **`styling.theme`** — preset: `clean` (default-modern), `muted` (low-contrast), `bold` (high-contrast), or `gradient` (colorful)
-- **`styling.primaryColor`** — `{light: "#xxxxxx", dark: "#xxxxxx"}` — the brand color, used for links, buttons, accents
-- **`styling.tint`** — `{color: {light, dark}}` — a subtle tint applied across text, icons, and UI elements (search bar, etc.). Does **not** affect link/button colour (those keep `primaryColor`). This is the field most brand guides mean when they say "background tint" or "secondary surface colour".
-- **`styling.infoColor` / `successColor` / `warningColor` / `dangerColor`** — semantic colors, each a themed pair
-- **`styling.font` / `styling.monospaceFont`** — pick a preset (`Inter`, `IBMPlexMono`, etc.) or supply a custom font definition with hosted woff2 files
-- **`styling.corners`** — `straight | rounded | circular`
-- **`styling.depth`** — `subtle | flat`
-- **`styling.icons`** — `regular | solid | duotone | light | thin`
-- **`styling.sidebar.background`** — `default | filled`
-- **`styling.sidebar.list`** — `default | pill | line`
-- **`styling.codeTheme.default` / `styling.codeTheme.openapi`** — themed code-block colors
-- **`styling.search`** — `prominent | subtle`
-- **`favicon`** — `{icon: {light, dark}}` (themed URLs) or `{emoji: "📘"}`
-- **`header.logo`** — `{light: <url-shown-in-light-mode>, dark: <url-shown-in-dark-mode>}` (Premium feature). The schema field name is the *mode the URL is shown in*, not the colour of the file. Brand guides often use ambiguous file names like `logo-dark.svg` (which can mean "the dark-coloured logo" — for light backgrounds — or "the logo for dark mode" — a light-coloured file). When in doubt, ask the user explicitly.
-- **`header.links`** — top-nav items. Each item has `title`, `style` (`link | button-primary | button-secondary`), `to` (a `ContentRef` — see below), `links: []` (for sub-menus), and an optional `condition` for conditional visibility.
-- **`footer.logo`** — same shape as header.logo (Premium)
-- **`footer.groups`** — grouped link lists for the footer. Each group has `title` (with optional `localizedTitle`) and `links`.
-- **`footer.copyright`** — string up to 300 chars
-- **`themes.default`** — `light | dark | system`; `themes.toggeable` controls whether visitors can switch
-- **`ai.mode`** — `none | search | assistant`; `ai.suggestions` for canned questions
-- **`pageActions`** — booleans: `externalAI` (open-in-ChatGPT), `markdown` (copy as markdown), `mcp` (connect via MCP)
-- **`pagination.enabled`** — prev/next page links at the bottom of pages
-- **`feedback.enabled`** — page feedback widget
-- **`pdf.enabled`** — PDF export button
-- **`socialAccounts`** — list of `{handle, platform, display: {footer, header}}` for icons in header/footer
-- **`git.showEditLink`** — whether the "Edit on GitHub" link appears on git-synced pages
-- **`externalLinks.target`** — `self | blank` for outbound links
-- **`insights.trackingCookie`** — whether GitBook places its analytics cookie
-- **`advancedCustomization.enabled`** — whether advanced CSS/JS is allowed (Enterprise)
-- **`announcement`** — site-wide banner: `{enabled, message, link?, style: info|warning|danger|success}`
-
-A handful of fields are present in responses but **deprecated** and should not be set on new sites: `internationalization.locale`, `header.preset` (use `styling.theme`), `header.backgroundColor`, `header.linkColor`. Leave existing values alone when round-tripping a GET; just don't introduce them.
-
-One quirk: `styling.background` reads as deprecated in some docs, but the API rejects POST/PUT without it (`422 expected "background" to be defined`). Treat it as required-but-vestigial — set to `"plain"` on new sites, or echo whatever GET returns on round-trip updates. Modern theming runs through `styling.tint` instead.
-
-Similarly, every entry in `header.links[]` requires a `links: []` array even when there's no sub-menu. The API rejects link items without it.
-
-### Content references (the `to` field)
-
-Header links, footer links, and `header.primaryLink` all use a `ContentRef` to specify destination. Three forms:
-
-- **External URL**: `{kind: "url", url: "https://..."}`
-- **Whole space**: `{kind: "space", space: "<spaceId>"}`
-- **Specific page**: `{kind: "page", page: "<pageId>", space: "<spaceId>"}` (use this to deep-link to e.g. the latest changelog entry)
-
-### Conditional links
-
-Header links can carry a `condition` field — a JS-like expression evaluated against `visitor.claims`. Pattern from the example site:
-
-```json
-{ "title": "Sign in",  "condition": "visitor.claims.unsigned.persona !== \"partner\"", ... }
-{ "title": "Sign out", "condition": "visitor.claims.unsigned.persona === \"partner\"",  ... }
-```
-
-This is how the same site shows different navigation to logged-in vs. logged-out visitors. The conditions reference visitor claims that GitBook resolves at render time.
-
-A few features (custom logos, custom fonts, semantic colors, footer logo, advanced customization, disabling the GitBook trademark) require Premium or Ultimate site plans. The API will reject these on free sites with 400/403 — handle the error gracefully and tell the user.
+The full field listing, API quirks (`styling.background` required-but-vestigial, `header.links[]` requiring `links: []`), `ContentRef` formats for header/footer links, and conditional link patterns are all in `references/customization-recipes.md` — see "Field cheatsheet" and Scenarios 4–5. Premium and Ultimate features (custom logos, custom fonts, semantic colors, footer logo, advanced customization) will be rejected with 400/403 on free sites — handle gracefully.
 
 `references/customization-recipes.md` has worked examples for: minimal brand pass (just colors + favicon), full brand with logos and fonts, dark-mode-only with toggle, and AI-assistant enabled with suggested prompts.
 
@@ -494,7 +438,7 @@ This is the part that has to feel polished. Once the repo is pushed and the site
 - **Don't paste an entire customization payload from memory.** GET the current state, modify, PUT it back. Schemas evolve and you'll write fewer bugs this way.
 - **Don't create a space for every section of content.** A space is a heavy unit (it has its own URL slug, sync, settings). Pages and folders within a space are the right tool for sub-grouping.
 - **Don't skip the structure-plan-and-confirm step**, even when the user is in a hurry. Restructuring a published site is painful.
-- **Don't over-format the SUMMARY.md.** GitBook's parser is strict about it. Defer to the rules in `write-gitbook`.
+- **Don't over-format the SUMMARY.md.** GitBook's parser is strict about it. Defer to the rules in `write-docs`.
 
 ## Reference files
 

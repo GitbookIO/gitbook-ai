@@ -1,0 +1,41 @@
+{
+  "skill_name": "write-openapi",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Add a GET /users endpoint to my OpenAPI spec that returns a paginated list of user objects. Each user has id, email, and created_at fields. I'm using this spec in a GitBook OpenAPI block.",
+      "expected_output": "Valid OpenAPI YAML for the /users GET endpoint with a 200 response schema, pagination query parameters, and a User object schema with the three specified fields.",
+      "files": [],
+      "expectations": [
+        "Output contains a /users path with a get operation",
+        "The 200 response references or inlines a schema with id, email, and created_at properties",
+        "Query parameters for pagination are defined (e.g., page and limit, or cursor)",
+        "The YAML is valid OpenAPI 3.x syntax"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "I have an endpoint in my spec that's been replaced by a newer version. I want to mark it as deprecated and hide it from the GitBook navigation sidebar, but keep it in the spec for existing users.",
+      "expected_output": "The operation with deprecated: true and x-hidden: true set, plus an explanation of the difference between the two.",
+      "files": [],
+      "expectations": [
+        "Output shows the operation with deprecated: true",
+        "Output includes x-hidden: true on the operation",
+        "Response explains that deprecated shows a visual badge while x-hidden removes it from the sidebar",
+        "The original endpoint path and method are preserved"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "My GitBook API reference uses the 'Test it' runner but authentication isn't working. I'm using Bearer tokens. How do I configure the spec so the runner prompts users for their token?",
+      "expected_output": "An OpenAPI securitySchemes definition for Bearer auth (http scheme, bearer format) with a top-level security requirement, and an explanation of how GitBook's Test it runner uses it.",
+      "files": [],
+      "expectations": [
+        "Output includes a securitySchemes entry with type: http and scheme: bearer",
+        "Output includes a top-level security array referencing the scheme",
+        "Response explains that the Test it runner reads the security scheme to show an auth input to the user",
+        "Output does not suggest non-standard workarounds that bypass OpenAPI security conventions"
+      ]
+    }
+  ]
+}

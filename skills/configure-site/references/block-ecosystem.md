@@ -2,7 +2,7 @@
 
 GitBook has a rich block ecosystem. A docs site that uses it well feels like a real product; one that doesn't feels like a `man` page. The skill's instinct when generating content should be to **reach for the specialized block**, not the markdown-y plain-text fallback. This reference catalogues the high-leverage blocks and the patterns they belong to.
 
-`write-gitbook` is the authority on the syntax of each block. This file is about *which block to use when*, with example invocations to anchor each pattern.
+`write-docs` is the authority on the syntax of each block. This file is about *which block to use when*, with example invocations to anchor each pattern.
 
 ## Mirror the source before inventing
 

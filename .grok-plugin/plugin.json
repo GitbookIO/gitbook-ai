@@ -1,0 +1,22 @@
+{
+  "name": "gitbook",
+  "version": "1.0.0",
+  "description": "GitBook skills for Grok — create and configure GitBook documentation sites via the REST API, author GitBook-flavored Markdown pages, and publish OpenAPI reference docs.",
+  "author": {
+    "name": "GitBook",
+    "email": "support@gitbook.com",
+    "url": "https://gitbook.com/"
+  },
+  "homepage": "https://gitbook.com/",
+  "repository": "https://github.com/GitbookIO/gitbook-ai",
+  "license": "MIT",
+  "keywords": [
+    "gitbook",
+    "documentation",
+    "docs",
+    "markdown",
+    "git-sync",
+    "openapi",
+    "api-reference"
+  ]
+}

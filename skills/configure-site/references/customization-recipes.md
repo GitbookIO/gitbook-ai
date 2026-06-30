@@ -352,7 +352,7 @@ A few related settings live elsewhere in the API:
 
 - **Custom domain** — set on the *site* itself (`Site.hostname`), not in customization. PATCH the site object.
 - **Site visibility** (public, share-link, etc.) — also on the site object.
-- **Per-page layout** (cover, table of contents visibility) — set in page frontmatter; see the `write-gitbook` skill.
+- **Per-page layout** (cover, table of contents visibility) — set in page frontmatter; see the `write-docs` skill.
 - **Auto-translation enablement** — UI-only today (Site → Sections → Translations).
 
 Don't try to put any of these in the customization payload; the API will reject them.

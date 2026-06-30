@@ -65,7 +65,7 @@ The most common migration source. Mintlify uses `.mdx` with React components; Gi
 | `<RequestExample>` / `<ResponseExample>` | A code block, optionally inside a tab |
 | `<ParamField name="..." type="..." required>` | A row in an API params table — **note: in `llms-full.txt` exports, `name=` is often stripped; you'll need a re-pass from the original `.mdx`** |
 | `<ResendParamField>`, `<YouTube />`, other custom components | Need case-by-case handling — there's no GitBook equivalent for a third-party-author custom component, so either inline a sensible substitute or note in a hint that the original had embedded content |
-| `icon={<svg>...</svg>}` (inline SVG in a prop) | Convert the SVG into either a Font Awesome icon name (where one exists) or a separate file under `.gitbook/assets/` referenced via `<img>` — see write-gitbook for SVG handling |
+| `icon={<svg>...</svg>}` (inline SVG in a prop) | Convert the SVG into either a Font Awesome icon name (where one exists) or a separate file under `.gitbook/assets/` referenced via `<img>` — see write-docs for SVG handling |
 | API reference pages (`api-reference/<endpoint>.mdx`) | **Don't convert these one by one.** Use `builtin:openapi` SUMMARY entries instead — see `block-ecosystem.md`. Mintlify API ref pages are auto-generated from the OpenAPI spec already, so the spec is the source of truth, not the `.mdx` files. |
 
 ### GitBook v1 (legacy)

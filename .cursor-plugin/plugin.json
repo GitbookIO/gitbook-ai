@@ -1,0 +1,14 @@
+{
+  "name": "gitbook",
+  "displayName": "GitBook",
+  "description": "Create, configure, and author GitBook documentation sites — site orchestration via the GitBook REST API, Git Sync setup, branding customization, and GitBook-flavored Markdown page authoring.",
+  "version": "1.0.0",
+  "author": {
+    "name": "GitBook",
+    "url": "https://gitbook.com"
+  },
+  "homepage": "https://gitbook.com",
+  "repository": "https://github.com/GitbookIO/gitbook-ai",
+  "license": "MIT",
+  "keywords": ["gitbook", "documentation", "docs", "markdown", "git-sync", "openapi"]
+}
