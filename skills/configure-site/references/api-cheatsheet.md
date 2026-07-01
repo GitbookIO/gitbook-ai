@@ -6,12 +6,9 @@ This cheatsheet is scoped to what the `configure-site` skill actually needs. The
 
 ## Auth and discovery
 
-The PAT lives in 1Password — fetch it once at the start of the session and export it as an env var. Never store it on disk, never echo it back, never commit it.
+`GITBOOK_TOKEN` should already be set in the environment by the time you reach this cheatsheet — see the token acquisition flow in `SKILL.md` (try a secrets manager if the user has one, otherwise prompt them to paste a personal access token created at https://app.gitbook.com/account/developer). Never store it on disk, never echo it back, never commit it.
 
 ```bash
-# Fetch the PAT from 1Password (replace with the user's actual secret reference)
-export GITBOOK_TOKEN=$(op read "op://<vault>/<item>/<field>")
-
 # Verify token and get the authenticated user
 curl -s -H "Authorization: Bearer $GITBOOK_TOKEN" \
   https://api.gitbook.com/v1/user
@@ -20,8 +17,6 @@ curl -s -H "Authorization: Bearer $GITBOOK_TOKEN" \
 curl -s -H "Authorization: Bearer $GITBOOK_TOKEN" \
   https://api.gitbook.com/v1/orgs
 ```
-
-If `op read` fails (not signed in, wrong reference, missing item), surface the exact error and stop — don't fall back to asking the user to paste the token.
 
 When the user has multiple orgs, **show the list with org titles and ask them to confirm by name**, even if there's only one — site creation in the wrong org is a real and visible mistake. Save the chosen `organizationId` for the rest of the session.
 
