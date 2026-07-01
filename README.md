@@ -17,6 +17,8 @@ Then select the ones you wish to install.
 | [`write-docs`](/GitbookIO/gitbook-skills/blob/main/skills/write-docs) | Author and edit GitBook-flavored Markdown pages |
 | [`configure-site`](/GitbookIO/gitbook-skills/blob/main/skills/configure-site) | Create and configure GitBook sites end-to-end via the REST API |
 | [`write-openapi`](/GitbookIO/gitbook-skills/blob/main/skills/write-openapi) | Author and publish OpenAPI reference docs in GitBook |
+| [`cr-create`](/GitbookIO/gitbook-skills/blob/main/skills/cr-create) | Drive a GitBook docs review flow via the REST API — create a change request, push content, request review, fix comments |
+| [`cr-review`](/GitbookIO/gitbook-skills/blob/main/skills/cr-review) | Review GitBook change requests via the REST API — discover CRs, summarize changes, comment, approve or request changes |
 
 ## Plugins
 

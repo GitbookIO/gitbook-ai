@@ -1,0 +1,39 @@
+{
+  "skill_name": "cr-review",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Show me the open change requests in my GitBook space (space ID abc123) that are waiting on review, and give me the GitBook app link to review each one.",
+      "expected_output": "Curl calls against https://api.gitbook.com/v1 that list the change requests for the space, filtered to those open/awaiting review, along with the GitBook app link for reviewing each change request's diff.",
+      "files": [],
+      "expectations": [
+        "Uses curl against https://api.gitbook.com/v1 (no gitbook2 CLI)",
+        "Lists change requests scoped to the given space ID",
+        "Filters to change requests that are open / awaiting review",
+        "Provides a GitBook app link to review each change request"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Summarize what actually changed in change request cr789.",
+      "expected_output": "Curl calls that fetch the change request's diff or changed files, followed by a concise summary of the actual changes.",
+      "files": [],
+      "expectations": [
+        "Fetches the change request's changed content/diff via the REST API",
+        "Summarizes the concrete changes rather than restating the CR title",
+        "Reports faithfully if nothing changed or the call errors instead of inventing a summary"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Leave a comment on change request cr789 and then request changes as my review verdict.",
+      "expected_output": "A curl call that posts a comment to the change request, followed by a curl call that submits a review verdict of 'request changes'.",
+      "files": [],
+      "expectations": [
+        "Posts a comment to the specified change request via the REST API",
+        "Submits a review verdict of request-changes (not approve)",
+        "Uses Bearer auth sourced from GITBOOK_TOKEN"
+      ]
+    }
+  ]
+}
