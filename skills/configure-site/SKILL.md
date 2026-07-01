@@ -28,7 +28,7 @@ If the user explicitly does not want Git Sync, fall back to the API content path
 
 Don't start scaffolding until these are known. If something is missing, ask once with a focused question rather than guessing.
 
-- **GitBook API token** — required for all API calls. Must be present as `GITBOOK_TOKEN` in the environment before any API calls are made. **Never ask the user to paste the token into the conversation** — tokens must only live in environment variables or a secrets manager.
+- **GitBook API token (personal access token)** — required for all API calls. Must be present as `GITBOOK_TOKEN` in the environment before any API calls are made.
 
   Check for it at the start of the session:
 
@@ -36,11 +36,17 @@ Don't start scaffolding until these are known. If something is missing, ask once
   [ -n "$GITBOOK_TOKEN" ] && echo "Token found" || echo "GITBOOK_TOKEN is not set"
   ```
 
-  If `GITBOOK_TOKEN` is not set:
-  1. Tell the user they need a GitBook API token. Direct them to **https://app.gitbook.com/account/developer** to create one.
-  2. Ask them to load it into the environment before continuing — for example:
-     - Directly: `export GITBOOK_TOKEN=<token>` in the terminal before starting the session
-     - From a secrets manager: `export GITBOOK_TOKEN=$(op read "op://vault/item/token")` for 1Password, or equivalent for AWS SSM, Vault, etc.
+  If `GITBOOK_TOKEN` is not set, try to source it from a secrets manager first, but don't assume the user has one — most new users won't:
+
+  ```bash
+  # Only if the relevant CLI is installed and the user has told you where the secret lives
+  command -v op >/dev/null 2>&1 && export GITBOOK_TOKEN=$(op read "op://vault/item/token")   # 1Password
+  # equivalent lookups for AWS SSM, Vault, etc.
+  ```
+
+  If no secrets manager is available, or the lookup fails, fall back to asking the user directly:
+  1. Tell them they need a GitBook personal access token. Direct them to **https://app.gitbook.com/account/developer** to create one.
+  2. Ask them to paste the token into the conversation. Immediately export it as an environment variable (`export GITBOOK_TOKEN=<pasted value>`) and don't repeat it back in your response.
   3. Do not proceed with any API calls until the token is confirmed present in the environment.
 
   Never write the token to a file, never echo it back in a response, never commit it.
