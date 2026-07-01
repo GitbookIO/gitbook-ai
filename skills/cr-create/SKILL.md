@@ -2,7 +2,7 @@
 name: cr-create
 metadata:
   version: "1.0"
-description: Drive an end-to-end GitBook docs review flow from Claude Code by calling the GitBook REST API directly with curl (no CLI) — create a change request, push content (update an existing page AND create a new page), request reviewers, notify Slack, then pull review comments back in, fix them, re-push, and resolve. This is the authoring-side companion to cr-review (the reviewer side over the same API). Use this whenever someone wants to run a "docs review in GitBook" loop from the terminal/agent against the raw API (curl/HTTP), mentions creating a change request via the API, pushing content into a CR, "pull in the latest comments and fix them," requesting review on docs, or showing engineers how to collaborate on GitBook docs from Claude + Slack without a CLI. Also triggers for the Chime review-flow demo when the direct-API path is wanted.
+description: Drive an end-to-end GitBook docs review flow from Claude Code by calling the GitBook REST API directly with curl (no CLI) — create a change request, push content (update an existing page AND create a new page), request reviewers, notify Slack, then pull review comments back in, fix them, re-push, and resolve. This is the authoring-side companion to cr-review (the reviewer side over the same API). Use this whenever someone wants to run a "docs review in GitBook" loop from the terminal/agent against the raw API (curl/HTTP), mentions creating a change request via the API, pushing content into a CR, "pull in the latest comments and fix them," requesting review on docs, or showing engineers how to collaborate on GitBook docs from Claude + Slack without a CLI.
 ---
 
 # GitBook Review Flow (direct API)
