@@ -1,0 +1,15 @@
+{
+  "name": "gitbook-skills",
+  "description": "GitBook's AI agent skills for site orchestration, page authoring, and OpenAPI reference docs.",
+  "owner": {
+    "name": "GitBook",
+    "email": "support@gitbook.com"
+  },
+  "plugins": [
+    {
+      "name": "gitbook",
+      "source": "./",
+      "description": "Comprehensive skill for GitBook documentation — create, manage, and author GitBook sites end-to-end via the GitBook REST API and Git Sync."
+    }
+  ]
+}
