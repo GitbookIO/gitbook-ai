@@ -1,0 +1,41 @@
+{
+  "skill_name": "cr-create",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Create a new change request in my GitBook space (space ID abc123) and push an updated version of an existing page into it using the GitBook REST API.",
+      "expected_output": "A sequence of curl calls against https://api.gitbook.com/v1 that creates a change request in the space and pushes updated page content into that change request, using Bearer auth from GITBOOK_TOKEN.",
+      "files": [],
+      "expectations": [
+        "Uses curl against https://api.gitbook.com/v1 (no gitbook2 CLI)",
+        "Creates a change request scoped to the given space ID",
+        "Pushes updated content for the existing page into the created change request",
+        "Authenticates with a Bearer token sourced from GITBOOK_TOKEN"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "In an open change request, request a reviewer and then post a Slack notification with the change request link.",
+      "expected_output": "A curl call that requests reviewers on the change request, followed by a curl POST to the Slack incoming webhook (SLACK_WEBHOOK_URL) containing the change request link.",
+      "files": [],
+      "expectations": [
+        "Requests one or more reviewers on the change request via the REST API",
+        "Posts to Slack only via the SLACK_WEBHOOK_URL incoming webhook",
+        "The Slack message includes a link to the change request",
+        "Prompts for SLACK_WEBHOOK_URL if it is not set rather than inventing another Slack path"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Pull in the latest review comments on my change request, address them, re-push the fixed content, and resolve the comments.",
+      "expected_output": "Curl calls that fetch the review comments on the change request, re-push updated page content, and mark the addressed comments as resolved.",
+      "files": [],
+      "expectations": [
+        "Fetches the change request's review comments via the REST API",
+        "Re-pushes updated page content into the same change request",
+        "Resolves the comments that were addressed",
+        "Reports faithfully if a call returns no comments or errors rather than fabricating output"
+      ]
+    }
+  ]
+}
