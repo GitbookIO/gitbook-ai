@@ -9,6 +9,16 @@ description: "Create and maintain entire GitBook documentation sites end-to-end 
 
 A skill for creating and maintaining entire GitBook documentation sites. Where `write-docs` covers what goes inside a single page, this skill covers everything around the pages: structure design, repo scaffolding, the GitBook REST API, and branding. Use the two skills together — this one calls into `write-docs` whenever it needs to generate or edit page content.
 
+## How you can talk to GitBook
+
+There isn't one single way to drive GitBook — there's the REST API, GitBook's MCP server, and the GitBook CLI. This skill is written against the REST API because it's universal, but check what you actually have available in the current session before defaulting to it: if GitBook MCP tools are already connected, prefer them for anything they cover (creating/configuring sites, opening change requests, drafting and editing content, restructuring docs) instead of shelling out to curl. Don't run a detection script for this — you already know your own available tools/MCP connections; just use that awareness.
+
+- **GitBook MCP** — a full read/write surface over the same API described below, not a narrower view. If it isn't connected yet and would clearly help, offer to set it up: `claude mcp add --transport http gitbook-mcp https://mcp.gitbook.com/mcp` (then `/mcp` to complete OAuth sign-in — or append `--header "Authorization: Bearer $GITBOOK_TOKEN"` to skip the browser flow). Codex equivalent: `codex mcp add gitbook-mcp --url https://mcp.gitbook.com/mcp`. Note: this is a different server from GitBook's separate, read-only "published docs" MCP, which only exposes already-published content.
+- **REST API** (`https://api.gitbook.com/v1`) — the fallback this skill documents in detail below. Needs `GITBOOK_TOKEN` as a bearer header on every request.
+- **GitBook CLI** (`gitbook`) — reach for it where a task calls for a CLI-specific command; also authenticates via `GITBOOK_TOKEN`.
+
+The same personal access token (from https://app.gitbook.com/account/developer) works as the bearer token across all three. MCP additionally supports OAuth as a friendlier alternative to pasting a token. Acquire the token once per session (see below) and reuse it regardless of which transport you end up using.
+
 ## The fundamental constraint
 
 The most important thing to internalize before doing anything: **GitBook's REST API can do almost everything except set up Git Sync**. Authorizing GitHub/GitLab, picking the repository, choosing the branch, setting the project directory for monorepo layouts, and choosing the initial sync direction are all UI-only operations. The API only lets you *read* the resulting Git Sync state (`GET /v1/spaces/{spaceId}/git/info`).

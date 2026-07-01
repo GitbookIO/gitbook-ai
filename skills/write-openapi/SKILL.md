@@ -22,6 +22,12 @@ GitBook turns an OpenAPI document into interactive, testable API reference block
 
 This skill covers the full surface: getting a spec into GitBook, generating reference pages, structuring navigation, making the "Test it" runner work, controlling how operations and schemas display, and automating updates from CI/CD.
 
+## How you can talk to GitBook
+
+Most of this skill is just editing the OpenAPI YAML/JSON itself, which is transport-agnostic. But getting a spec *into* GitBook, or generating/inserting reference pages, does touch GitBook — and there's more than one way to do that: the GitBook CLI (documented below), the GitBook app UI, and GitBook's MCP server, which are largely interchangeable here. Check what's actually available in the current session and prefer that over improvising a UI walkthrough: if GitBook MCP tools are already connected, use them directly for publishing/updating a spec or generating reference pages instead of narrating UI clicks. You already know your own available tools/MCP connections — no need to run a detection script for this.
+
+If MCP isn't connected and would clearly help, offer to set it up: `claude mcp add --transport http gitbook-mcp https://mcp.gitbook.com/mcp` (then `/mcp` to complete OAuth sign-in, or append `--header "Authorization: Bearer $GITBOOK_TOKEN"` to skip the browser flow). Codex equivalent: `codex mcp add gitbook-mcp --url https://mcp.gitbook.com/mcp`. The same personal access token (from https://app.gitbook.com/account/developer, exported as `GITBOOK_TOKEN`) works as the bearer token for the CLI and MCP alike.
+
 ## Key facts to know first
 
 These shape almost every decision, so internalize them before editing anything.
