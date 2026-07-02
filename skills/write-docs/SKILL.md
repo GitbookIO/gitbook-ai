@@ -85,7 +85,7 @@ layout:
 * Read SUMMARY.md first when working with existing content
 * Test in GitBook after editing locally
 * Keep SUMMARY.md synchronized with your file structure
-* OpenAPI specs must be uploaded via API/CLI/UI, not embedded in markdown
+* OpenAPI specs must be uploaded via the UI, API, MCP, or CLI, not embedded in markdown
 
 ### When to Use Which Block
 
